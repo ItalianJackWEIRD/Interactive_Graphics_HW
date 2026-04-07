@@ -45,8 +45,13 @@ var meshVS = `
 	attribute vec3 pos;		
 	uniform mat4 mvp;
 	uniform bool swapYZ;
+	attribute vec2 texCoord;
+	varying vec2 vTexCoord;
+
 	void main() {
 		vec3 p = pos;
+		vTexCoord = texCoord;
+
 		if (swapYZ) {
 			p = vec3(p.x, p.z, p.y);
 		}
@@ -57,8 +62,15 @@ var meshVS = `
 
 var meshFS = `
 	precision mediump float;
+	uniform bool showTex;
+	uniform sampler2D tex;
+	varying vec2 vTexCoord;
+
 	void main() {
-		gl_FragColor = vec4(1.0, gl_FragCoord.z * gl_FragCoord.z, 0.0, 1.0);	// rosso = 1.0, blu = 0.0
+		if (showTex)
+			gl_FragColor = texture2D(tex, vTexCoord);
+		else
+			gl_FragColor = vec4(1.0, gl_FragCoord.z * gl_FragCoord.z, 0.0, 1.0);	// rosso = 1.0, blu = 0.0
 	}`;
 
 
@@ -74,6 +86,12 @@ class MeshDrawer {
 		this.swapYZLoc = gl.getUniformLocation(this.prog, 'swapYZ');
 		this.vertBuffer = gl.createBuffer();
 		this.numTriangles = 0;
+
+		this.showTexLoc = gl.getUniformLocation(this.prog, 'showTex');
+		this.texLoc = gl.getUniformLocation(this.prog, 'tex');
+		this.texCoordLoc = gl.getAttribLocation(this.prog, 'texCoord');
+		this.texBuffer = gl.createBuffer();
+		this.texture = gl.createTexture();
 	}
 
 	// This method is called every time the user opens an OBJ file.
@@ -90,6 +108,9 @@ class MeshDrawer {
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vertBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertPos), gl.STATIC_DRAW);
 		this.numTriangles = vertPos.length / 3;	// number of triangles
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
 	}
 
 	// This method is called when the user changes the state of the
@@ -113,6 +134,14 @@ class MeshDrawer {
 		gl.vertexAttribPointer(this.posLoc, 3, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(this.posLoc);
 
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texBuffer);
+		gl.vertexAttribPointer(this.texCoordLoc, 2, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(this.texCoordLoc);
+
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_2D, this.texture);
+		gl.uniform1i(this.texLoc, 0);
+
 		gl.drawArrays(gl.TRIANGLES, 0, this.numTriangles);
 	}
 
@@ -120,12 +149,19 @@ class MeshDrawer {
 	// The argument is an HTML IMG element containing the texture data.
 	setTexture(img) {
 		// [TO-DO] Bind the texture
-
+		gl.bindTexture(gl.TEXTURE_2D, this.texture);
 		// You can set the texture image data using the following command.
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
 
 		// [TO-DO] Now that we have a texture, it might be a good idea to set
 		// some uniform parameter(s) of the fragment shader, so that it uses the texture.
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+		gl.useProgram(this.prog);
+		gl.uniform1i(this.showTexLoc, 1);
 	}
 
 	// This method is called when the user changes the state of the
@@ -133,6 +169,8 @@ class MeshDrawer {
 	// The argument is a boolean that indicates if the checkbox is checked.
 	showTexture(show) {
 		// [TO-DO] set the uniform parameter(s) of the fragment shader to specify if it should use the texture.
+		gl.useProgram(this.prog);
+		gl.uniform1i(this.showTexLoc, show ? 1 : 0);
 	}
 
 }
