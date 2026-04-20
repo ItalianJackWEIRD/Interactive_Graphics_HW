@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Graphics — Project 2 Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,500;0,700;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f11;
+  --bg2: #14161a;
+  --bg3: #1c1f25;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8e6e0;
+  --muted: #8a8780;
+  --hint: #555350;
+
+  --purple: #a89cf7;
+  --purple-bg: rgba(168,156,247,0.1);
+  --purple-border: rgba(168,156,247,0.25);
+
+  --blue: #6fb3f7;
+  --blue-bg: rgba(111,179,247,0.1);
+  --blue-border: rgba(111,179,247,0.25);
+
+  --teal: #4ecfa0;
+  --teal-bg: rgba(78,207,160,0.1);
+  --teal-border: rgba(78,207,160,0.25);
+
+  --amber: #f5c06a;
+  --amber-bg: rgba(245,192,106,0.1);
+  --amber-border: rgba(245,192,106,0.25);
+
+  --coral: #f48a6e;
+  --coral-bg: rgba(244,138,110,0.1);
+  --coral-border: rgba(244,138,110,0.25);
+
+  --green: #7dc96a;
+  --green-bg: rgba(125,201,106,0.1);
+  --green-border: rgba(125,201,106,0.25);
+
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --serif: 'Fraunces', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 3rem 1.5rem;
+}
+
+.page-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ── header ── */
+.header {
+  border-bottom: 0.5px solid var(--border);
+  padding-bottom: 2rem;
+  margin-bottom: 3rem;
+}
+.header-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--hint);
+  letter-spacing: .06em;
+  margin-bottom: .75rem;
+}
+.header h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 2.4rem;
+  color: var(--text);
+  letter-spacing: -.01em;
+  line-height: 1.1;
+  margin-bottom: .5rem;
+}
+.header h1 em { font-style: italic; color: var(--purple); }
+.header-sub {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ── section ── */
+.section { margin-bottom: 3rem; }
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--border);
+}
+
+/* ── card ── */
+.card {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+.card + .card { margin-top: .75rem; }
+.card-title {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── grids ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .75rem; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+@media (max-width: 720px) {
+  .g3, .g4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 500px) {
+  .g2, .g3, .g4 { grid-template-columns: 1fr; }
+}
+
+/* ── badges ── */
+.badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+}
+.b-purple { background: var(--purple-bg); color: var(--purple); border: 0.5px solid var(--purple-border); }
+.b-blue   { background: var(--blue-bg);   color: var(--blue);   border: 0.5px solid var(--blue-border); }
+.b-teal   { background: var(--teal-bg);   color: var(--teal);   border: 0.5px solid var(--teal-border); }
+.b-amber  { background: var(--amber-bg);  color: var(--amber);  border: 0.5px solid var(--amber-border); }
+.b-coral  { background: var(--coral-bg);  color: var(--coral);  border: 0.5px solid var(--coral-border); }
+.b-green  { background: var(--green-bg);  color: var(--green);  border: 0.5px solid var(--green-border); }
+
+/* ── code ── */
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--amber);
+}
+pre {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  line-height: 1.8;
+  color: var(--text);
+  margin-top: .5rem;
+}
+.kw  { color: var(--purple); }
+.fn  { color: var(--blue); }
+.str { color: var(--teal); }
+.cm  { color: var(--hint); }
+.num { color: var(--amber); }
+
+/* ── pipeline ── */
+.pipeline { display: flex; flex-direction: column; gap: 0; }
+.pipe-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 52px;
+}
+.pipe-box {
+  min-width: 160px;
+  width: 160px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+.pipe-conn {
+  width: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hint);
+  font-size: 16px;
+  position: relative;
+}
+.pipe-conn::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 0.5px;
+  background: var(--border);
+}
+.pipe-desc {
+  flex: 1;
+  padding: .6rem .9rem;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+  border-left: 0.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .25rem;
+}
+.pipe-gap { height: 6px; }
+
+/* ── matrix ── */
+.matrix-wrap {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 2;
+  color: var(--text);
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  text-align: center;
+  margin-top: .5rem;
+}
+.mat-hl { color: var(--amber); }
+.mat-trig { color: var(--teal); }
+
+/* ── flow pills ── */
+.flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: .75rem 0;
+}
+.pill {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  color: var(--text);
+  white-space: nowrap;
+}
+.pill.p-purple { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
+.pill.p-blue   { background: var(--blue-bg);   border-color: var(--blue-border);   color: var(--blue); }
+.pill.p-teal   { background: var(--teal-bg);   border-color: var(--teal-border);   color: var(--teal); }
+.pill.p-amber  { background: var(--amber-bg);  border-color: var(--amber-border);  color: var(--amber); }
+.pill.p-coral  { background: var(--coral-bg);  border-color: var(--coral-border);  color: var(--coral); }
+.arrow { color: var(--hint); font-size: 14px; }
+
+/* ── tags ── */
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin: 2px;
+}
+.t-attr    { background: var(--purple-bg); color: var(--purple); border: 0.5px solid var(--purple-border); }
+.t-uni     { background: var(--amber-bg);  color: var(--amber);  border: 0.5px solid var(--amber-border); }
+.t-out     { background: var(--teal-bg);   color: var(--teal);   border: 0.5px solid var(--teal-border); }
+.t-vary    { background: var(--blue-bg);   color: var(--blue);   border: 0.5px solid var(--blue-border); }
+
+/* ── kv table ── */
+.kv { width: 100%; border-collapse: collapse; }
+.kv tr { border-bottom: 0.5px solid var(--border); }
+.kv tr:last-child { border-bottom: none; }
+.kv td { padding: .45rem 0; font-size: 13px; vertical-align: top; }
+.kv td:first-child { color: var(--muted); width: 48%; padding-right: 1rem; }
+.kv td:last-child { color: var(--text); font-weight: 500; }
+.kv code { font-size: 11px; }
+
+/* ── info box ── */
+.info {
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-left: 2px solid var(--purple);
+  border-radius: 0 8px 8px 0;
+  padding: .75rem 1rem;
+  margin-top: .75rem;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.info.i-amber { border-left-color: var(--amber); }
+.info.i-teal  { border-left-color: var(--teal); }
+.info.i-blue  { border-left-color: var(--blue); }
+.info.i-coral { border-left-color: var(--coral); }
+
+/* ── misc ── */
+p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+p + p { margin-top: .4rem; }
+ul { padding-left: 1.2rem; }
+li { color: var(--muted); font-size: 13px; line-height: 1.7; }
+strong { color: var(--text); font-weight: 500; }
+.divider { border: none; border-top: 0.5px solid var(--border); margin: .9rem 0; }
+.small { font-size: 11px; color: var(--hint); font-family: var(--mono); }
+
+/* ── two-part side card ── */
+.side-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.side-card-half {
+  padding: 1.25rem 1.5rem;
+}
+.side-card-half + .side-card-half {
+  border-left: 0.5px solid var(--border);
+}
+@media (max-width: 600px) {
+  .side-card { grid-template-columns: 1fr; }
+  .side-card-half + .side-card-half { border-left: none; border-top: 0.5px solid var(--border); }
+}
+
+/* ── TOC ── */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 1.25rem;
+}
+.toc a {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--muted);
+  text-decoration: none;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  transition: color .15s, border-color .15s;
+}
+.toc a:hover { color: var(--text); border-color: var(--border2); }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-meta">CS — Interactive Graphics · Project 2 · WebGL 3D Mesh Rendering</div>
+  <h1>WebGL &amp; <em>3D Rendering</em><br>Study Notes</h1>
+  <p class="header-sub">Complete theoretical reference for rendering a textured triangular mesh on the GPU: transformation matrices, the shader pipeline, buffers, textures, and the MeshDrawer class.</p>
+  <nav class="toc">
+    <a href="#s0">Overview</a>
+    <a href="#s1">Pipeline stages</a>
+    <a href="#s2">MVP matrices</a>
+    <a href="#s3">Vertex shader</a>
+    <a href="#s4">Fragment shader</a>
+    <a href="#s5">Buffers (VBO)</a>
+    <a href="#s6">Textures</a>
+    <a href="#s7">Uniforms vs attributes</a>
+    <a href="#s8">Depth test</a>
+    <a href="#s9">MeshDrawer class</a>
+    <a href="#s10">OBJ loading</a>
+    <a href="#s11">Quick reference</a>
+  </nav>
+</div>
+
+
+<!-- ── 0 OVERVIEW ── -->
+<div class="section" id="s0">
+  <div class="section-label">0 — overview</div>
+  <div class="card">
+    <p style="margin-bottom:.9rem">In WebGL, geometry lives on the <strong>CPU</strong> as JavaScript arrays. To draw it, the data must be copied to <strong>GPU memory</strong> (buffers). The GPU then processes it through a programmable pipeline — transforming vertices and coloring pixels — in parallel across thousands of cores.</p>
+    <div class="flow">
+      <div class="pill p-purple">CPU / JavaScript</div>
+      <div class="arrow">→</div>
+      <div class="pill p-blue">GPU Buffers (VBO)</div>
+      <div class="arrow">→</div>
+      <div class="pill p-amber">Vertex Shader</div>
+      <div class="arrow">→</div>
+      <div class="pill">Rasterization</div>
+      <div class="arrow">→</div>
+      <div class="pill p-coral">Fragment Shader</div>
+      <div class="arrow">→</div>
+      <div class="pill">Depth Test</div>
+      <div class="arrow">→</div>
+      <div class="pill p-teal">Framebuffer → Screen</div>
+    </div>
+    <div class="info i-amber">
+      <strong>Key insight:</strong> only two stages are programmable by us — the <strong>vertex shader</strong> and the <strong>fragment shader</strong>. Everything else is handled automatically by the GPU fixed-function hardware.
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 1 PIPELINE ── -->
+<div class="section" id="s1">
+  <div class="section-label">1 — pipeline stages in detail</div>
+  <div class="card">
+    <div class="pipeline">
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--purple-bg);color:var(--purple)">CPU / JavaScript</div>
+        <div class="pipe-conn"></div>
+        <div class="pipe-desc">
+          <span>Constructs <code>Float32Array</code> with vertex positions (xyz) and texture coordinates (uv). Calls <code>gl.bufferData()</code> to upload to the GPU. Computes the MVP matrix each frame and sends it as a uniform before drawing.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--blue-bg);color:var(--blue)">GPU Buffers<br><span style="font-size:10px;font-family:var(--mono);font-weight:400">(VBO)</span></div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Blocks of GPU memory holding vertex data. Two VBOs per mesh: one for positions (3 floats/vertex), one for UV coords (2 floats/vertex). The GPU reads them in the order dictated by <code>vertexAttribPointer</code>.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--amber-bg);color:var(--amber)">Vertex Shader<br><span style="font-size:10px;font-family:var(--mono);font-weight:400">programmable ★</span></div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Runs <strong>once per vertex</strong> — entirely on the GPU in parallel. Receives position and texcoord as <em>attributes</em> and the MVP matrix as a <em>uniform</em>. Outputs <code>gl_Position</code> (clip-space 4D vector) and passes <code>vTexCoord</code> as a <em>varying</em> to the next stage.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--bg3)">Primitive Assembly</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Groups processed vertices into triangles (or lines/points). With <code>gl.TRIANGLES</code>, every 3 consecutive vertices form one triangle.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--bg3)">Clipping</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Triangles outside the view frustum (the pyramid of visible space) are discarded or clipped against the near/far planes and the 4 side planes. This is automatic and based on the clip-space coordinates produced by the vertex shader.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--bg3)">Rasterization</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Fills the interior of each triangle with <em>fragments</em> (candidate pixels). <strong>Interpolates</strong> all varyings (e.g. <code>vTexCoord</code>) smoothly across the surface using barycentric coordinates. One fragment per covered screen pixel.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--coral-bg);color:var(--coral)">Fragment Shader<br><span style="font-size:10px;font-family:var(--mono);font-weight:400">programmable ★</span></div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Runs <strong>once per fragment</strong>. Receives interpolated <code>vTexCoord</code>. Either samples the texture image using <code>texture2D()</code> or computes a color procedurally. Outputs <code>gl_FragColor</code> (RGBA vec4).</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--bg3)">Depth Test (Z-buffer)</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Compares the fragment's z-value against the depth buffer (which stores the closest z seen so far at each pixel). If the fragment is behind, it is <strong>discarded</strong> — occlusion is handled automatically. Enabled with <code>gl.enable(gl.DEPTH_TEST)</code>.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--teal-bg);color:var(--teal)">Framebuffer → Screen</div>
+        <div class="pipe-conn"></div>
+        <div class="pipe-desc">
+          <span>Surviving fragments write their color into the color buffer. Cleared each frame with <code>gl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT)</code>. The result is displayed on the canvas.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 2 MVP MATRICES ── -->
+<div class="section" id="s2">
+  <div class="section-label">2 — MVP transformation matrices</div>
+
+  <div class="card" style="margin-bottom:.75rem">
+    <div class="card-title">Why matrices?</div>
+    <p>Every 3D object needs to move from <strong>object space</strong> (where the vertices are defined) to <strong>screen space</strong> (where pixels live). This is done by multiplying the vertex position by a chain of matrices. The chain is called MVP = Model × View × Projection. In this project, Model + View are merged into one ModelView transform.</p>
+    <div class="info i-amber">
+      <strong>Column-major storage:</strong> WebGL stores matrices column-by-column in a flat array of 16 floats. The translation components sit at indices 12, 13, 14 — not 3, 7, 11 as in row-major notation. Always keep this in mind when building matrices manually.
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-title"><span class="badge b-purple">Rx</span> Rotation around X</div>
+      <div class="matrix-box">
+        [ <span class="num">1</span>,   <span class="num">0</span>,    <span class="num">0</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num">0</span>,  <span class="mat-trig">cos</span>, <span class="mat-trig">sin</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num">0</span>, -<span class="mat-trig">sin</span>, <span class="mat-trig">cos</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num">0</span>,   <span class="num">0</span>,    <span class="num">0</span>,  <span class="num">1</span> ]
+      </div>
+      <p style="margin-top:.6rem">Rotates in the <strong>YZ plane</strong>. Computed from the angle in radians: <code>cx = Math.cos(rotX)</code>, <code>sx = Math.sin(rotX)</code>.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge b-purple">Ry</span> Rotation around Y</div>
+      <div class="matrix-box">
+        [ <span class="mat-trig">cy</span>,  <span class="num">0</span>, -<span class="mat-trig">sy</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num"> 0</span>,  <span class="num">1</span>,  <span class="num"> 0</span>,  <span class="num">0</span> ]<br>
+        [ <span class="mat-trig">sy</span>,  <span class="num">0</span>,  <span class="mat-trig">cy</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num"> 0</span>,  <span class="num">0</span>,  <span class="num"> 0</span>,  <span class="num">1</span> ]
+      </div>
+      <p style="margin-top:.6rem">Rotates in the <strong>XZ plane</strong> (spins the object left/right). <code>cy = Math.cos(rotY)</code>, <code>sy = Math.sin(rotY)</code>.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge b-purple">T</span> Translation</div>
+      <div class="matrix-box">
+        [ <span class="num">1</span>,  <span class="num">0</span>,  <span class="num">0</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num">0</span>,  <span class="num">1</span>,  <span class="num">0</span>,  <span class="num">0</span> ]<br>
+        [ <span class="num">0</span>,  <span class="num">0</span>,  <span class="num">1</span>,  <span class="num">0</span> ]<br>
+        [ <span class="mat-hl">tx</span>, <span class="mat-hl">ty</span>, <span class="mat-hl">tz</span>,  <span class="num">1</span> ]
+      </div>
+      <p style="margin-top:.6rem">Moves the object by <code>(tx, ty, tz)</code>. In column-major layout the translation is in the <strong>last row</strong> of the flat array (indices 12–14).</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:.75rem">
+    <div class="card-title"><span class="badge b-blue">P</span> Perspective projection matrix</div>
+    <div class="g2">
+      <div>
+        <p>Provided externally to <code>GetModelViewProjection()</code>. It maps eye-space 3D coordinates into <strong>clip space</strong> — a normalized cube where the GPU can perform the perspective divide (farther = smaller). Key parameters:</p>
+        <ul style="margin-top:.5rem">
+          <li><strong>fov</strong> — field of view angle (60° here)</li>
+          <li><strong>aspect ratio</strong> — canvas width / height</li>
+          <li><strong>near plane (n)</strong> — minimum visible depth</li>
+          <li><strong>far plane (f)</strong> — maximum visible depth</li>
+        </ul>
+      </div>
+      <div>
+        <div class="matrix-box" style="margin-top:0">
+          [ <span class="mat-trig">s/r</span>,  <span class="num">0</span>,         <span class="num">0</span>,          <span class="num">0</span> ]<br>
+          [ <span class="num">0</span>,   <span class="mat-trig">s</span>,         <span class="num">0</span>,          <span class="num">0</span> ]<br>
+          [ <span class="num">0</span>,   <span class="num">0</span>,  <span class="mat-hl">(n+f)/(f-n)</span>,  <span class="num">1</span> ]<br>
+          [ <span class="num">0</span>,   <span class="num">0</span>,  <span class="mat-hl">-2nf/(f-n)</span>,  <span class="num">0</span> ]
+        </div>
+        <p style="margin-top:.4rem"><code>s = 1/tan(fov/2)</code>, <code>r = aspect ratio</code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:.75rem">
+    <div class="card-title"><span class="badge b-blue">MVP</span> Composition — order is critical</div>
+    <div class="flow">
+      <div class="pill">1. Rotate X</div>
+      <div class="arrow">×</div>
+      <div class="pill">2. Rotate Y</div>
+      <div class="arrow">×</div>
+      <div class="pill">3. Translate</div>
+      <div class="arrow">×</div>
+      <div class="pill p-blue">4. Projection</div>
+      <div class="arrow">=</div>
+      <div class="pill p-teal">MVP</div>
+    </div>
+    <pre><span class="cm">// Matrices are applied right-to-left when multiplied</span>
+<span class="cm">// This order: vertex first rotates, then moves, then is projected</span>
+<span class="kw">var</span> mvp = <span class="fn">MatrixMult</span>(projectionMatrix,
+            <span class="fn">MatrixMult</span>(trans,
+              <span class="fn">MatrixMult</span>(rotY, rotX)));</pre>
+    <div class="info i-teal">
+      <strong>Why this order?</strong> Matrix multiplication is not commutative. If you translate first and then rotate, the object orbits around the world origin. If you rotate first and then translate, it spins on its own axis and then moves — which is the intended behavior for this viewer.
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 3 VERTEX SHADER ── -->
+<div class="section" id="s3">
+  <div class="section-label">3 — vertex shader</div>
+  <div class="card">
+    <div class="card-title"><span class="badge b-amber">GLSL</span> meshVS — vertex shader source</div>
+    <div class="g2">
+      <div>
+        <p style="margin-bottom:.5rem"><strong>Inputs</strong></p>
+        <div>
+          <span class="tag t-attr">attribute vec3 pos</span>
+          <span class="tag t-attr">attribute vec2 texCoord</span>
+          <span class="tag t-uni">uniform mat4 mvp</span>
+          <span class="tag t-uni">uniform bool swapYZ</span>
+        </div>
+        <p style="margin-top:.75rem margin-bottom:.5rem"><strong>Outputs</strong></p>
+        <div>
+          <span class="tag t-out">gl_Position</span>
+          <span class="tag t-vary">varying vec2 vTexCoord</span>
+        </div>
+        <div class="info i-blue" style="margin-top:.75rem">
+          <strong>attribute</strong> = one value per vertex, read from a VBO.<br>
+          <strong>uniform</strong> = same for all vertices in the draw call.<br>
+          <strong>varying</strong> = written by the VS, interpolated by rasterization, read by the FS.
+        </div>
+      </div>
+      <div>
+        <pre><span class="kw">attribute</span> <span class="fn">vec3</span> pos;
+<span class="kw">attribute</span> <span class="fn">vec2</span> texCoord;
+<span class="kw">uniform</span>   <span class="fn">mat4</span> mvp;
+<span class="kw">uniform</span>   <span class="fn">bool</span> swapYZ;
+<span class="kw">varying</span>   <span class="fn">vec2</span> vTexCoord;
+
+<span class="kw">void</span> main() {
+  <span class="fn">vec3</span> p = pos;
+  vTexCoord = texCoord;
+
+  <span class="cm">// swap Y↔Z for axis convention</span>
+  <span class="kw">if</span> (swapYZ)
+    p = <span class="fn">vec3</span>(p.x, p.z, p.y);
+
+  <span class="cm">// apply full MVP transform</span>
+  gl_Position = mvp * <span class="fn">vec4</span>(p, <span class="num">1.0</span>);
+}</pre>
+      </div>
+    </div>
+    <div class="info">
+      <strong>vec4(p, 1.0):</strong> Homogeneous coordinates. The 4th component <code>w=1</code> marks this as a <em>point</em> (as opposed to <code>w=0</code> which would be a direction vector). The perspective divide (<code>xyz/w</code>) happens automatically after the vertex shader.
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 4 FRAGMENT SHADER ── -->
+<div class="section" id="s4">
+  <div class="section-label">4 — fragment shader</div>
+  <div class="card">
+    <div class="card-title"><span class="badge b-coral">GLSL</span> meshFS — fragment shader source</div>
+    <div class="g2">
+      <div>
+        <p style="margin-bottom:.5rem"><strong>Inputs</strong></p>
+        <div>
+          <span class="tag t-vary">varying vec2 vTexCoord</span>
+          <span class="tag t-uni">uniform bool showTex</span>
+          <span class="tag t-uni">uniform sampler2D tex</span>
+        </div>
+        <p style="margin-top:.75rem"><strong>Output</strong></p>
+        <div><span class="tag t-out">gl_FragColor (vec4 RGBA)</span></div>
+
+        <div class="info i-coral" style="margin-top:.75rem">
+          <strong>sampler2D</strong> is a special uniform type representing a texture unit. You don't pass the texture directly — you pass an integer (0, 1, 2…) referring to the active texture slot (<code>gl.TEXTURE0</code>, etc.).
+        </div>
+        <div class="info i-teal" style="margin-top:.6rem">
+          <strong>gl_FragCoord.z</strong> is a built-in that gives the depth of the current fragment in window space (0 = near, 1 = far). Squaring it (<code>z²</code>) gives a non-linear distribution that looks visually richer.
+        </div>
+      </div>
+      <div>
+        <pre><span class="kw">precision</span> mediump <span class="fn">float</span>;
+<span class="kw">uniform</span> <span class="fn">bool</span>      showTex;
+<span class="kw">uniform</span> <span class="fn">sampler2D</span> tex;
+<span class="kw">varying</span> <span class="fn">vec2</span>      vTexCoord;
+
+<span class="kw">void</span> main() {
+  <span class="kw">if</span> (showTex) {
+    <span class="cm">// sample texture at UV coord</span>
+    gl_FragColor =
+      <span class="fn">texture2D</span>(tex, vTexCoord);
+  } <span class="kw">else</span> {
+    <span class="cm">// depth-based color (no texture)</span>
+    <span class="cm">// red=1, green=z², blue=0</span>
+    gl_FragColor = <span class="fn">vec4</span>(
+      <span class="num">1.0</span>,
+      gl_FragCoord.z * gl_FragCoord.z,
+      <span class="num">0.0</span>,
+      <span class="num">1.0</span>
+    );
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 5 BUFFERS ── -->
+<div class="section" id="s5">
+  <div class="section-label">5 — GPU buffers (VBO)</div>
+  <div class="card" style="margin-bottom:.75rem">
+    <div class="card-title">What is a VBO?</div>
+    <p>A <strong>Vertex Buffer Object</strong> is a named block of memory allocated on the GPU. Once data is uploaded, the GPU can read it during rendering without any CPU involvement. This is critical for performance — the bottleneck in real-time graphics is usually the CPU→GPU data transfer.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The 3-step upload workflow</div>
+    <div class="flow" style="margin-bottom:.75rem">
+      <div class="pill p-blue">1. createBuffer()</div>
+      <div class="arrow">→</div>
+      <div class="pill p-blue">2. bind + bufferData()</div>
+      <div class="arrow">→</div>
+      <div class="pill p-blue">3. vertexAttribPointer()</div>
+    </div>
+    <div class="g2">
+      <div>
+        <p style="margin-bottom:.3rem"><strong>Position buffer</strong> — 3 floats per vertex</p>
+        <pre><span class="cm">// Step 1: allocate</span>
+<span class="kw">this</span>.vertBuffer = gl.<span class="fn">createBuffer</span>();
+
+<span class="cm">// Step 2: bind and upload</span>
+gl.<span class="fn">bindBuffer</span>(gl.ARRAY_BUFFER, vertBuffer);
+gl.<span class="fn">bufferData</span>(gl.ARRAY_BUFFER,
+  <span class="kw">new</span> <span class="fn">Float32Array</span>(vertPos),
+  gl.STATIC_DRAW);
+
+<span class="cm">// Step 3: describe layout to shader</span>
+gl.<span class="fn">vertexAttribPointer</span>(posLoc,
+  <span class="num">3</span>,        <span class="cm">// 3 floats per vertex</span>
+  gl.FLOAT, <span class="kw">false</span>, <span class="num">0</span>, <span class="num">0</span>);
+gl.<span class="fn">enableVertexAttribArray</span>(posLoc);</pre>
+      </div>
+      <div>
+        <p style="margin-bottom:.3rem"><strong>TexCoord buffer</strong> — 2 floats per vertex</p>
+        <pre><span class="cm">// Step 1: allocate</span>
+<span class="kw">this</span>.texBuffer = gl.<span class="fn">createBuffer</span>();
+
+<span class="cm">// Step 2: bind and upload</span>
+gl.<span class="fn">bindBuffer</span>(gl.ARRAY_BUFFER, texBuffer);
+gl.<span class="fn">bufferData</span>(gl.ARRAY_BUFFER,
+  <span class="kw">new</span> <span class="fn">Float32Array</span>(texCoords),
+  gl.STATIC_DRAW);
+
+<span class="cm">// Step 3: describe layout to shader</span>
+gl.<span class="fn">vertexAttribPointer</span>(texCoordLoc,
+  <span class="num">2</span>,        <span class="cm">// 2 floats per vertex</span>
+  gl.FLOAT, <span class="kw">false</span>, <span class="num">0</span>, <span class="num">0</span>);
+gl.<span class="fn">enableVertexAttribArray</span>(texCoordLoc);</pre>
+      </div>
+    </div>
+    <div class="info i-amber">
+      <strong>STATIC_DRAW</strong> tells the driver the data will be set once and used many times — it can optimize placement in GPU memory. <strong>DYNAMIC_DRAW</strong> would be used for data that changes frequently (e.g. particle positions updated every frame).
+    </div>
+    <div style="margin-top:.75rem">
+      <p><strong>Triangle count:</strong> <code>numTriangles = vertPos.length / 3</code> — this gives the number of <em>vertices</em> (each vertex = 3 floats). With <code>gl.TRIANGLES</code>, every group of 3 vertices is one triangle, so there are <code>numTriangles / 3</code> actual triangles. The variable name is slightly misleading — it is the vertex count used directly in <code>gl.drawArrays()</code>.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 6 TEXTURES ── -->
+<div class="section" id="s6">
+  <div class="section-label">6 — textures</div>
+  <div class="card" style="margin-bottom:.75rem">
+    <div class="card-title">UV / texture coordinates</div>
+    <div class="g2">
+      <div>
+        <p>Each vertex carries a 2D coordinate <code>(u, v)</code> that maps it to a point on the texture image. Both components range from <strong>0 to 1</strong> regardless of image resolution. The rasterizer interpolates UV across the triangle surface; the fragment shader uses the interpolated UV to look up the correct texel color.</p>
+      </div>
+      <div>
+        <table class="kv">
+          <tr><td>(0, 0)</td><td>bottom-left corner of the image</td></tr>
+          <tr><td>(1, 0)</td><td>bottom-right corner</td></tr>
+          <tr><td>(0, 1)</td><td>top-left corner</td></tr>
+          <tr><td>(1, 1)</td><td>top-right corner</td></tr>
+          <tr><td>u &gt; 1</td><td>wraps/repeats (if REPEAT mode)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Texture setup — setTexture(img)</div>
+    <div class="g2">
+      <div>
+        <pre><span class="cm">// 1. Bind the texture object</span>
+gl.<span class="fn">bindTexture</span>(gl.TEXTURE_2D, <span class="kw">this</span>.texture);
+
+<span class="cm">// 2. Upload image data from &lt;img&gt; element</span>
+gl.<span class="fn">texImage2D</span>(gl.TEXTURE_2D, <span class="num">0</span>,
+  gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+
+<span class="cm">// 3. Filtering: how to sample between texels</span>
+gl.<span class="fn">texParameteri</span>(gl.TEXTURE_2D,
+  gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+gl.<span class="fn">texParameteri</span>(gl.TEXTURE_2D,
+  gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+<span class="cm">// 4. Wrapping: what to do when UV > 1</span>
+gl.<span class="fn">texParameteri</span>(gl.TEXTURE_2D,
+  gl.TEXTURE_WRAP_S, gl.REPEAT);
+gl.<span class="fn">texParameteri</span>(gl.TEXTURE_2D,
+  gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+<span class="cm">// 5. Enable texture in fragment shader</span>
+gl.<span class="fn">uniform1i</span>(showTexLoc, <span class="num">1</span>);</pre>
+      </div>
+      <div>
+        <p style="margin-bottom:.75rem"><strong>Filtering modes:</strong></p>
+        <table class="kv">
+          <tr><td><code>LINEAR</code></td><td>Bilinear interpolation between nearest texels — smooth result</td></tr>
+          <tr><td><code>NEAREST</code></td><td>Pick the closest single texel — pixelated/retro look</td></tr>
+          <tr><td><code>MIPMAP</code></td><td>Uses pre-scaled versions of the texture at different distances — better quality at small sizes (not used here)</td></tr>
+        </table>
+        <div class="divider"></div>
+        <p style="margin-bottom:.75rem"><strong>Wrapping modes:</strong></p>
+        <table class="kv">
+          <tr><td><code>REPEAT</code></td><td>Texture tiles seamlessly when UV &gt; 1</td></tr>
+          <tr><td><code>CLAMP_TO_EDGE</code></td><td>Extends the border pixel — no tiling</td></tr>
+          <tr><td><code>MIRRORED_REPEAT</code></td><td>Alternates original and mirrored tile</td></tr>
+        </table>
+        <div class="info i-teal" style="margin-top:.75rem">
+          <strong>Texture units:</strong> The GPU has multiple texture slots (TEXTURE0, TEXTURE1…). You activate a slot with <code>gl.activeTexture(gl.TEXTURE0)</code>, bind the texture to it, then pass <strong>the slot index</strong> (0) to the sampler uniform — not the texture object itself.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 7 UNIFORMS VS ATTRIBUTES ── -->
+<div class="section" id="s7">
+  <div class="section-label">7 — uniforms vs attributes vs varyings</div>
+  <div class="side-card">
+    <div class="side-card-half">
+      <div class="card-title"><span class="tag t-uni">uniform</span></div>
+      <p style="margin-bottom:.6rem">Same value for <strong>every vertex</strong> in the draw call. Set from JavaScript before drawing. Can be used in both vertex and fragment shaders.</p>
+      <table class="kv">
+        <tr><td><code>mvp</code></td><td>4×4 transform matrix</td></tr>
+        <tr><td><code>swapYZ</code></td><td>bool — axis swap flag</td></tr>
+        <tr><td><code>showTex</code></td><td>bool — texture on/off</td></tr>
+        <tr><td><code>tex</code></td><td>sampler2D — texture unit</td></tr>
+      </table>
+      <pre style="margin-top:.75rem"><span class="cm">// How to set uniforms from JS:</span>
+gl.<span class="fn">uniformMatrix4fv</span>(mvpLoc, <span class="kw">false</span>, matrix);
+gl.<span class="fn">uniform1i</span>(showTexLoc, <span class="num">1</span>);
+gl.<span class="fn">uniform1i</span>(swapYZLoc, swap ? <span class="num">1</span> : <span class="num">0</span>);</pre>
+    </div>
+    <div class="side-card-half">
+      <div class="card-title"><span class="tag t-attr">attribute</span> &amp; <span class="tag t-vary">varying</span></div>
+      <p style="margin-bottom:.6rem"><strong>Attributes</strong> carry a different value for each vertex — read from a VBO. Only available in the vertex shader.</p>
+      <table class="kv">
+        <tr><td><code>pos</code></td><td>vec3 — xyz position</td></tr>
+        <tr><td><code>texCoord</code></td><td>vec2 — uv coordinate</td></tr>
+      </table>
+      <div class="divider"></div>
+      <p style="margin:.6rem 0"><strong>Varyings</strong> are written in the vertex shader and automatically interpolated by the rasterizer before being read in the fragment shader.</p>
+      <table class="kv">
+        <tr><td><code>vTexCoord</code></td><td>interpolated UV coord passed from VS to FS</td></tr>
+      </table>
+      <div class="info i-blue" style="margin-top:.6rem">
+        <strong>Interpolation:</strong> if vertex A has uv=(0,0) and vertex B has uv=(1,0), a fragment halfway between them receives uv=(0.5,0) — automatic barycentric interpolation.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 8 DEPTH TEST ── -->
+<div class="section" id="s8">
+  <div class="section-label">8 — depth test &amp; Z-buffer</div>
+  <div class="card">
+    <div class="g2">
+      <div>
+        <div class="card-title">How it works</div>
+        <p>The GPU maintains a <strong>depth buffer</strong> — a 2D array of floats, one per pixel, storing the z-value of the closest fragment drawn so far. For each new fragment:</p>
+        <ul style="margin-top:.5rem">
+          <li>If its z &lt; stored depth → it is <strong>closer</strong> → write color + update depth buffer</li>
+          <li>If its z ≥ stored depth → it is <strong>behind something</strong> → discard it</li>
+        </ul>
+        <p style="margin-top:.6rem">This automatically handles occlusion between objects and between triangles of the same object, regardless of draw order.</p>
+      </div>
+      <div>
+        <div class="card-title">Usage in this project</div>
+        <pre><span class="cm">// Enable once at init:</span>
+gl.<span class="fn">enable</span>(gl.DEPTH_TEST);
+
+<span class="cm">// Clear both buffers each frame:</span>
+gl.<span class="fn">clear</span>(
+  gl.COLOR_BUFFER_BIT |
+  gl.DEPTH_BUFFER_BIT
+);
+
+<span class="cm">// gl_FragCoord.z in the fragment</span>
+<span class="cm">// shader gives the depth value [0,1]</span>
+<span class="cm">// 0 = near plane, 1 = far plane</span></pre>
+        <div class="info" style="margin-top:.6rem">
+          The depth range [0,1] is non-linear — more precision is allocated near the camera. This is why near/far plane values matter: setting <code>near</code> too small causes "z-fighting" (flickering triangles at the same depth).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 9 MESHDRAWER CLASS ── -->
+<div class="section" id="s9">
+  <div class="section-label">9 — MeshDrawer class — full method map</div>
+  <div class="card">
+    <div class="pipeline">
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--purple-bg);color:var(--purple);font-family:var(--mono);font-size:11px">constructor()</div>
+        <div class="pipe-conn"></div>
+        <div class="pipe-desc">
+          <span>Called once after WebGL is initialized. <strong>Compiles</strong> the GLSL shader program (<code>InitShaderProgram</code>). <strong>Retrieves locations</strong> of all uniforms (<code>mvp</code>, <code>swapYZ</code>, <code>showTex</code>, <code>tex</code>) and attributes (<code>pos</code>, <code>texCoord</code>) via <code>getUniformLocation</code> / <code>getAttribLocation</code>. <strong>Allocates</strong> GPU buffers (<code>vertBuffer</code>, <code>texBuffer</code>) and a texture object. No drawing yet.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--blue-bg);color:var(--blue);font-family:var(--mono);font-size:11px">setMesh(pos, uv)</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Called every time the user loads an OBJ file (can be called multiple times). Binds each VBO and calls <code>gl.bufferData()</code> with the new data. Stores <code>numTriangles = vertPos.length / 3</code> (the vertex count used in drawArrays). Overwrites any previous mesh.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--amber-bg);color:var(--amber);font-family:var(--mono);font-size:11px">draw(mvp)</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>The main render call, invoked every frame. In order: <code>useProgram</code> → set <code>mvp</code> uniform → bind position VBO + <code>vertexAttribPointer(3)</code> → bind texcoord VBO + <code>vertexAttribPointer(2)</code> → <code>activeTexture(TEXTURE0)</code> + bind texture + <code>uniform1i(tex, 0)</code> → <code>gl.drawArrays(TRIANGLES, 0, numTriangles)</code>.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--teal-bg);color:var(--teal);font-family:var(--mono);font-size:11px">setTexture(img)</div>
+        <div class="pipe-conn">↓</div>
+        <div class="pipe-desc">
+          <span>Binds the texture object → <code>texImage2D</code> (uploads HTML img to GPU) → sets <code>LINEAR</code> filtering and <code>REPEAT</code> wrapping → enables <code>showTex</code> uniform = 1 so the fragment shader switches to texture sampling mode.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--bg3);font-family:var(--mono);font-size:11px">showTexture(bool)</div>
+        <div class="pipe-conn"></div>
+        <div class="pipe-desc">
+          <span>Toggles the <code>showTex</code> uniform — switches the fragment shader between texture sampling mode and depth-color mode. Called when the user clicks the "Show Texture" checkbox.</span>
+        </div>
+      </div>
+      <div class="pipe-gap"></div>
+
+      <div class="pipe-row">
+        <div class="pipe-box" style="background:var(--bg3);font-family:var(--mono);font-size:11px">swapYZ(bool)</div>
+        <div class="pipe-conn"></div>
+        <div class="pipe-desc">
+          <span>Toggles the <code>swapYZ</code> uniform in the vertex shader — corrects OBJ files that use a Y-up convention vs the Z-up convention (or vice versa). A simple <code>vec3(p.x, p.z, p.y)</code> swap in the shader handles this with zero CPU cost.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 10 OBJ LOADING ── -->
+<div class="section" id="s10">
+  <div class="section-label">10 — OBJ loading &amp; mesh normalization</div>
+  <div class="card">
+    <div class="card-title">Why normalize?</div>
+    <p style="margin-bottom:.75rem">An OBJ file can have vertices anywhere — a model of a city might span millions of units, a molecule might be fractions of a unit. Normalization ensures every loaded model always appears centered and fills the reference box, regardless of its original scale or position.</p>
+    <div class="flow" style="margin-bottom:.75rem">
+      <div class="pill">1. Parse OBJ text</div>
+      <div class="arrow">→</div>
+      <div class="pill">2. Triangulate faces</div>
+      <div class="arrow">→</div>
+      <div class="pill">3. Compute bounding box</div>
+      <div class="arrow">→</div>
+      <div class="pill">4. Shift to origin</div>
+      <div class="arrow">→</div>
+      <div class="pill">5. Scale to max=1</div>
+      <div class="arrow">→</div>
+      <div class="pill p-teal">6. Upload to GPU</div>
+    </div>
+    <div class="g2">
+      <div>
+        <pre><span class="cm">// Compute bounding box</span>
+<span class="kw">var</span> box = mesh.<span class="fn">getBoundingBox</span>();
+
+<span class="cm">// Shift: move centroid to origin</span>
+<span class="kw">var</span> shift = [
+  -(box.min[<span class="num">0</span>]+box.max[<span class="num">0</span>])/<span class="num">2</span>,
+  -(box.min[<span class="num">1</span>]+box.max[<span class="num">1</span>])/<span class="num">2</span>,
+  -(box.min[<span class="num">2</span>]+box.max[<span class="num">2</span>])/<span class="num">2</span>
+];
+
+<span class="cm">// Scale: fit inside unit box</span>
+<span class="kw">var</span> maxSize = Math.<span class="fn">max</span>(
+  (box.max[<span class="num">0</span>]-box.min[<span class="num">0</span>])/<span class="num">2</span>,
+  (box.max[<span class="num">1</span>]-box.min[<span class="num">1</span>])/<span class="num">2</span>,
+  (box.max[<span class="num">2</span>]-box.min[<span class="num">2</span>])/<span class="num">2</span>
+);
+<span class="kw">var</span> scale = <span class="num">1</span>/maxSize;
+
+mesh.<span class="fn">shiftAndScale</span>(shift, scale);</pre>
+      </div>
+      <div>
+        <table class="kv">
+          <tr><td>shift formula</td><td><code>-(min + max) / 2</code> — moves the center of the bounding box to (0,0,0)</td></tr>
+          <tr><td>scale formula</td><td><code>1 / maxSize</code> — the largest dimension becomes exactly 1 unit</td></tr>
+          <tr><td>result</td><td>all vertices inside the cube [−1, +1]³, matching the reference box drawn by BoxDrawer</td></tr>
+        </table>
+        <div class="info i-teal" style="margin-top:.75rem">
+          <strong>OBJ format basics:</strong> Lines starting with <code>v</code> define vertex positions, <code>vt</code> define texture coordinates, <code>f</code> define faces as groups of vertex/texcoord index pairs. The parser in <code>obj.js</code> reads these and builds the flat arrays.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 11 QUICK REF ── -->
+<div class="section" id="s11">
+  <div class="section-label">11 — quick reference</div>
+  <div class="g2">
+
+    <div class="card">
+      <div class="card-title">GLSL built-ins used</div>
+      <table class="kv">
+        <tr><td><code>gl_Position</code></td><td>output clip-space vertex position (vec4)</td></tr>
+        <tr><td><code>gl_FragColor</code></td><td>output pixel color (vec4 RGBA 0–1)</td></tr>
+        <tr><td><code>gl_FragCoord</code></td><td>window-space position of fragment (.xy = pixel, .z = depth)</td></tr>
+        <tr><td><code>texture2D(s, uv)</code></td><td>sample texture <code>s</code> at UV coordinate</td></tr>
+        <tr><td><code>vec4(v, w)</code></td><td>extend vec3 to vec4 by appending w</td></tr>
+        <tr><td><code>vec3(x, y, z)</code></td><td>swizzle / construct a 3D vector</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">WebGL API calls used</div>
+      <table class="kv">
+        <tr><td><code>createBuffer()</code></td><td>allocate a GPU buffer handle</td></tr>
+        <tr><td><code>bindBuffer(target, buf)</code></td><td>make buf the current buffer for target</td></tr>
+        <tr><td><code>bufferData(target, data, hint)</code></td><td>upload CPU array to bound buffer</td></tr>
+        <tr><td><code>vertexAttribPointer()</code></td><td>describe buffer layout to shader attribute</td></tr>
+        <tr><td><code>enableVertexAttribArray()</code></td><td>activate an attribute slot</td></tr>
+        <tr><td><code>drawArrays(mode, first, count)</code></td><td>execute the shader pipeline</td></tr>
+        <tr><td><code>uniform1i / Matrix4fv</code></td><td>set uniform values from JS</td></tr>
+        <tr><td><code>texImage2D()</code></td><td>upload image data to a texture object</td></tr>
+        <tr><td><code>texParameteri()</code></td><td>set texture filtering / wrap mode</td></tr>
+        <tr><td><code>activeTexture(TEXTURE0)</code></td><td>select which texture unit to use</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Coordinate spaces</div>
+      <table class="kv">
+        <tr><td>Object space</td><td>vertices as defined in the OBJ file</td></tr>
+        <tr><td>World space</td><td>after applying model (rotation + translation)</td></tr>
+        <tr><td>Eye / camera space</td><td>after applying view transform (camera at origin)</td></tr>
+        <tr><td>Clip space</td><td>after projection — homogeneous 4D coords</td></tr>
+        <tr><td>NDC</td><td>after perspective divide (xyz all in [−1, +1])</td></tr>
+        <tr><td>Window space</td><td>after viewport transform — actual screen pixels</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Common pitfalls</div>
+      <table class="kv">
+        <tr><td>Wrong matrix order</td><td>object orbits instead of spinning on its own axis</td></tr>
+        <tr><td>Row vs column-major</td><td>matrix looks correct but produces wrong transform</td></tr>
+        <tr><td>Forgot enableVertexAttribArray</td><td>attribute reads zeros — object collapses or disappears</td></tr>
+        <tr><td>Forgot DEPTH_TEST clear</td><td>depth buffer not reset — ghost geometry from previous frame</td></tr>
+        <tr><td>Non-power-of-2 texture without CLAMP</td><td>WebGL 1 may error — use CLAMP_TO_EDGE or resize texture</td></tr>
+        <tr><td>Near plane too small</td><td>z-fighting / flickering where two surfaces coincide</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div style="border-top:0.5px solid var(--border);padding-top:1.5rem;margin-top:1rem">
+  <p class="small" style="color:var(--hint)">CS Interactive Graphics · Project 2 — WebGL Textured Mesh Rendering · Study Notes</p>
+</div>
+
+</div>
+</body>
+</html>
