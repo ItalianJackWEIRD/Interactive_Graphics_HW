@@ -1,0 +1,213 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); color: var(--color-text-primary); }
+.page { padding: 1.5rem 0; max-width: 680px; }
+.section-title { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: .75rem; }
+.card { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.2rem; margin-bottom: .75rem; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: .35rem; }
+.card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; }
+.tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; margin-right: 4px; margin-bottom: 4px; }
+.tag-purple { background: #EEEDFE; color: #3C3489; }
+.tag-teal   { background: #E1F5EE; color: #085041; }
+.tag-amber  { background: #FAEEDA; color: #633806; }
+.tag-coral  { background: #FAECE7; color: #4A1B0C; }
+@media (prefers-color-scheme: dark) {
+  .tag-purple { background: #26215C; color: #CECBF6; }
+  .tag-teal   { background: #04342C; color: #9FE1CB; }
+  .tag-amber  { background: #412402; color: #FAC775; }
+  .tag-coral  { background: #4A1B0C; color: #F5C4B3; }
+}
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.25rem 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.mono { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-tertiary); border-radius: 6px; padding: .6rem .8rem; margin-top: .5rem; line-height: 1.6; color: var(--color-text-primary); border: 0.5px solid var(--color-border-tertiary); white-space: pre; overflow-x: auto; }
+.matrix { font-family: var(--font-mono); font-size: 12.5px; color: var(--color-text-primary); border-collapse: collapse; margin: .5rem auto; }
+.matrix td { padding: 2px 10px; text-align: center; }
+.matrix .bracket { font-size: 2rem; font-weight: 200; color: var(--color-text-secondary); vertical-align: middle; }
+.highlight { color: #185FA5; font-weight: 500; }
+@media (prefers-color-scheme: dark) { .highlight { color: #85B7EB; } }
+.hl-amber { color: #854F0B; font-weight: 500; }
+@media (prefers-color-scheme: dark) { .hl-amber { color: #FAC775; } }
+.hl-teal { color: #0F6E56; font-weight: 500; }
+@media (prefers-color-scheme: dark) { .hl-teal { color: #5DCAA5; } }
+.hl-coral { color: #993C1D; font-weight: 500; }
+@media (prefers-color-scheme: dark) { .hl-coral { color: #F0997B; } }
+.row { display: flex; gap: .75rem; margin-bottom: .75rem; }
+.row .card { flex: 1; margin-bottom: 0; }
+.badge { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 4px; font-weight: 500; margin-right: 6px; }
+.badge-step { background: var(--color-background-tertiary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+</style>
+
+<div class="page">
+
+<div class="section-title">Homework 1 — 2D Transformations · Reference Sheet</div>
+
+<!-- THEORY BLOCK -->
+<div class="card">
+  <div class="card-title">Core Concept — What is a 2D Transformation?</div>
+  <div class="card-body">
+    An operation that moves, rotates, or scales a point on screen. Three building blocks:
+    <br><br>
+    <span class="tag tag-purple">Translation</span> shifts a point by (tx, ty)<br>
+    <span class="tag tag-teal">Rotation</span> rotates around the origin by angle θ<br>
+    <span class="tag tag-amber">Scale</span> multiplies coordinates by a factor s
+  </div>
+</div>
+
+<div class="row">
+  <div class="card">
+    <div class="card-title">Homogeneous Coordinates</div>
+    <div class="card-body">
+      2D points use a <span class="highlight">3rd dummy coordinate w=1</span> so all three transforms become matrix multiplications.<br><br>
+      <span class="hl-teal">(x, y)</span> becomes <span class="hl-teal">(x, y, 1)</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Why 3×3 for 2D?</div>
+    <div class="card-body">
+      Translation can't be expressed as a plain 2×2 multiply. Adding the w row makes it possible. All three ops then combine into <span class="highlight">one matrix multiply</span> per vertex.
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+<div class="section-title">The Three Base Matrices (written on paper, row-major)</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">Translation</div>
+    <table class="matrix">
+      <tr>
+        <td class="bracket" rowspan="3">[</td>
+        <td>1</td><td>0</td><td class="hl-coral">tx</td>
+        <td class="bracket" rowspan="3">]</td>
+      </tr>
+      <tr><td>0</td><td>1</td><td class="hl-coral">ty</td></tr>
+      <tr><td>0</td><td>0</td><td>1</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Scale</div>
+    <table class="matrix">
+      <tr>
+        <td class="bracket" rowspan="3">[</td>
+        <td class="hl-amber">s</td><td>0</td><td>0</td>
+        <td class="bracket" rowspan="3">]</td>
+      </tr>
+      <tr><td>0</td><td class="hl-amber">s</td><td>0</td></tr>
+      <tr><td>0</td><td>0</td><td>1</td></tr>
+    </table>
+  </div>
+</div>
+<div class="card" style="margin-top:.75rem">
+  <div class="card-title">Rotation by θ</div>
+  <table class="matrix">
+    <tr>
+      <td class="bracket" rowspan="3">[</td>
+      <td class="highlight">cos θ</td><td class="hl-coral">−sin θ</td><td>0</td>
+      <td class="bracket" rowspan="3">]</td>
+    </tr>
+    <tr><td class="hl-teal">sin θ</td><td class="highlight">cos θ</td><td>0</td></tr>
+    <tr><td>0</td><td>0</td><td>1</td></tr>
+  </table>
+  <div class="card-body" style="margin-top:.4rem">Verify: point (1,0) rotated 90° → (cos90=0, sin90=1) → result (0,1) ✓</div>
+</div>
+
+<hr class="divider">
+<div class="section-title">Column-Major Order — how WebGL/CSS store matrices</div>
+
+<div class="card">
+  <div class="card-body">
+    WebGL (and this project) store matrices as a <span class="highlight">1D array read column by column</span>, not row by row.<br><br>
+    On paper the matrix looks like this:<br>
+  </div>
+  <div class="mono">array[0]  array[3]  array[6]    ← row 0
+array[1]  array[4]  array[7]    ← row 1
+array[2]  array[5]  array[8]    ← row 2</div>
+  <div class="card-body" style="margin-top:.6rem">
+    So <span class="highlight">index = col×3 + row</span>. The translation values tx,ty live at indices <span class="hl-coral">[6]</span> and <span class="hl-coral">[7]</span> (column 2).
+  </div>
+</div>
+
+<hr class="divider">
+<div class="section-title">Combined Transform — order matters</div>
+
+<div class="card">
+  <div class="card-title">The Rule: apply Scale → Rotation → Translation</div>
+  <div class="card-body">
+    Transforms are not commutative: <span class="hl-coral">A×B ≠ B×A</span>.<br>
+    If you translate first then rotate, the object orbits the origin instead of spinning in place.<br><br>
+    Scale and Rotation merge into one block because <span class="highlight">c = cos(θ)×s</span> and <span class="hl-teal">sn = sin(θ)×s</span>:<br>
+  </div>
+  <table class="matrix">
+    <tr>
+      <td class="bracket" rowspan="3">[</td>
+      <td class="highlight">c</td><td class="hl-coral">−sn</td><td class="hl-coral">tx</td>
+      <td class="bracket" rowspan="3">]</td>
+    </tr>
+    <tr><td class="hl-teal">sn</td><td class="highlight">c</td><td class="hl-coral">ty</td></tr>
+    <tr><td>0</td><td>0</td><td>1</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+<div class="section-title">The Code — GetTransform</div>
+
+<div class="card">
+  <div class="mono">function GetTransform(posX, posY, rotation, scale) {
+  let rad = rotation * Math.PI / 180; // degrees → radians
+  let c  = Math.cos(rad) * scale;     // cosine × scale
+  let sn = Math.sin(rad) * scale;     // sine   × scale
+
+  // Column-major: read each column top→bottom
+  return [
+     c,  sn, 0,   // column 0
+    -sn,  c, 0,   // column 1
+    posX, posY, 1 // column 2  ← translation here
+  ];
+}</div>
+  <div class="card-body" style="margin-top:.6rem">
+    The browser CSS function <code>matrix(a,b,c,d,e,f)</code> receives exactly indices <span class="highlight">[0],[1],[3],[4],[6],[7]</span> — the prof picks them out of your array.
+  </div>
+</div>
+
+<hr class="divider">
+<div class="section-title">The Code — ApplyTransform (matrix multiplication)</div>
+
+<div class="card">
+  <div class="card-body">
+    Needed for the 4 propellers: combine the propeller's local transform with the drone's global transform.<br>
+    <span class="badge badge-step">rule</span> result element at (row, col) = dot product of row <em>row</em> of trans2 with column <em>col</em> of trans1.
+  </div>
+  <div class="mono">function ApplyTransform(trans1, trans2) {
+  let result = new Array(9);
+  for (let col = 0; col < 3; col++) {
+    for (let row = 0; row < 3; row++) {
+      result[col*3 + row] =           // output at (row,col)
+        trans2[0*3+row]*trans1[col*3+0] +
+        trans2[1*3+row]*trans1[col*3+1] +
+        trans2[2*3+row]*trans1[col*3+2];
+    }
+  }
+  return result;
+}</div>
+  <div class="card-body" style="margin-top:.6rem">
+    In column-major: element at (row,col) lives at index <span class="highlight">col×3 + row</span>.<br>
+    The loop accesses <span class="hl-teal">trans2 row-wise</span> and <span class="hl-coral">trans1 column-wise</span> — exactly the definition of matrix multiplication.
+  </div>
+</div>
+
+<hr class="divider">
+<div class="section-title">How It All Fits Together</div>
+
+<div class="card">
+  <div class="card-body">
+    <span class="badge badge-step">1</span> Mouse moves → prof updates <code>uav.positionX/Y</code><br>
+    <span class="badge badge-step">2</span> Prof calls <code>GetTransform(posX, posY, rotation, scale)</code> → your matrix <code>m</code><br>
+    <span class="badge badge-step">3</span> Prof applies <code>m</code> to the drone body via CSS <code>matrix()</code><br>
+    <span class="badge badge-step">4</span> For each propeller: <code>GetTransform(offset, r, 1)</code> → local matrix <code>t</code><br>
+    <span class="badge badge-step">5</span> Prof calls <code>ApplyTransform(t, m)</code> → combined matrix → propeller placed at correct world position
+  </div>
+</div>
+
+</div>
