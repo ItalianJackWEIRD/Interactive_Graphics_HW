@@ -41,6 +41,13 @@ vec3 Shade( Material mtl, vec3 position, vec3 normal, vec3 view )
 	vec3 color = vec3(0,0,0);
 	for ( int i=0; i<NUM_LIGHTS; ++i ) {
 		// TO-DO: Check for shadows
+		Ray shadowRay;
+		shadowRay.pos = position + 0.001 * normal;	// OFFSET per evitare collisione iniziale
+		shadowRay.dir = lights[i].position - shadowRay.pos; // NON normalizzato
+		HitInfo shadowHit;
+		if  ( IntersectRay( shadowHit, shadowRay ) && shadowHit.t < 1.0 ) {
+			continue;	// la luce è bloccata da un oggetto, quindi passo alla luce successiva
+		}
 
 		// TO-DO: If not shadowed, perform shading using the Blinn model
 		vec3 lightDir = normalize( lights[i].position - position ); // direction from the point to the light source
@@ -112,10 +119,17 @@ vec4 RayTracer( Ray ray )
 			HitInfo h;	// reflection hit info
 			
 			// TO-DO: Initialize the reflection ray
+			r.pos = hit.position + 0.001 * hit.normal; // OFFSET per evitare collisione iniziale
+			r.dir = reflect ( -view, hit.normal );
 			
 			if ( IntersectRay( h, r ) ) {
 				// TO-DO: Hit found, so shade the hit point
+				view = normalize( -r.dir );
+				clr += k_s * Shade( h.mtl, h.position, h.normal, view);
+
 				// TO-DO: Update the loop variables for tracing the next reflection ray
+				k_s *= h.mtl.k_s;
+				hit = h;
 			} else {
 				// The refleciton ray did not intersect with anything,
 				// so we are using the environment color
